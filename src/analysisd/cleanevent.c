@@ -144,6 +144,17 @@ int OS_CleanMSG(char *msg, Eventinfo *lf)
             lf->log++;
         }
 
+	/* Check for FreeBSD's verbose (syslogd with -v or -vv) format
+	 * Examples:
+	 * Nov  4 09:38:08 <4.6> fbsdtest1 sshd[91700]:
+	 * Nov  4 09:38:08 <auth.info> fbsdtest1 sshd[91700]:
+	 */
+	if (*lf->log == '<') {
+	    while (*lf->log !='>') {
+                lf->log++;
+	    }
+            lf->log+=2;
+	}
 
         /* Hostname */
         pieces = lf->hostname = lf->log;
